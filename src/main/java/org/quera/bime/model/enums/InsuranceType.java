@@ -1,6 +1,6 @@
 package org.quera.bime.model.enums;
 
-public enum Type {
+public enum InsuranceType {
     PERSON,
     VEHICLE
 }
