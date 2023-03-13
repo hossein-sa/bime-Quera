@@ -4,4 +4,5 @@ import org.quera.bime.model.dto.InsuranceDto;
 
 public interface InsuranceService {
     void save(InsuranceDto insuranceDto);
+    InsuranceDto get(Long id);
 }

@@ -1,6 +1,7 @@
 package org.quera.bime.service.impl;
 
 import org.quera.bime.model.CompanyEntity;
+import org.quera.bime.model.InsuranceEntity;
 import org.quera.bime.model.PersonInsuranceEntity;
 import org.quera.bime.model.VehicleInsuranceEntity;
 import org.quera.bime.model.dto.InsuranceDto;
@@ -58,4 +59,31 @@ public class InsuranceServiceImpl implements InsuranceService {
         }
     }
 
+    @Override
+    public InsuranceDto get(Long id) {
+        Optional<InsuranceEntity> insuranceOptional = insuranceRepository.findById(id);
+        if (!insuranceOptional.isPresent()) {
+            throw new IllegalArgumentException("Insurance not found for id: " + id);
+        }
+        InsuranceEntity insuranceEntity = insuranceOptional.get();
+        if (insuranceEntity.getType().equals(InsuranceType.PERSON)) {
+            PersonInsuranceEntity insurance = (PersonInsuranceEntity) insuranceOptional.get();
+            return PersonInsuranceDto.builder()
+                    .type(insurance.getType())
+                    .name(insurance.getName())
+                    .price(insurance.getPrice())
+                    .companyId(insurance.getCompany().getId())
+                    .minAge(insurance.getMinAge())
+                    .build();
+        } else {
+            VehicleInsuranceEntity insurance = (VehicleInsuranceEntity) insuranceOptional.get();
+            return VehicleInsuranceDto.builder()
+                    .type(insurance.getType())
+                    .name(insurance.getName())
+                    .price(insurance.getPrice())
+                    .companyId(insurance.getCompany().getId())
+                    .usage(insurance.getUsage())
+                    .build();
+        }
+    }
 }
