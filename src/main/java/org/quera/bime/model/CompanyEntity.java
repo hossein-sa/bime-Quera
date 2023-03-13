@@ -19,12 +19,12 @@ import java.util.List;
 public class CompanyEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
     @Column(nullable = false)
-    private String name;
+    String name;
 
     @OneToMany(mappedBy = "company")
-    private List<InsuranceEntity> insurances;
+    List<InsuranceEntity> insurances;
 
 
 }
