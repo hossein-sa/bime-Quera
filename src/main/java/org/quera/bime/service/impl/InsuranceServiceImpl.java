@@ -1,17 +1,18 @@
 package org.quera.bime.service.impl;
 
 import org.quera.bime.model.CompanyEntity;
-import org.quera.bime.model.InsuranceEntity;
 import org.quera.bime.model.PersonInsuranceEntity;
 import org.quera.bime.model.VehicleInsuranceEntity;
-import org.quera.bime.model.dto.CreateInsuranceDto;
-import org.quera.bime.model.enums.Type;
+import org.quera.bime.model.dto.InsuranceDto;
+import org.quera.bime.model.dto.PersonInsuranceDto;
+import org.quera.bime.model.dto.VehicleInsuranceDto;
+import org.quera.bime.model.enums.InsuranceType;
 import org.quera.bime.repository.CompanyRepository;
 import org.quera.bime.repository.InsuranceRepository;
 import org.quera.bime.service.InsuranceService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class InsuranceServiceImpl implements InsuranceService {
@@ -27,23 +28,34 @@ public class InsuranceServiceImpl implements InsuranceService {
     }
 
     @Override
-    public void createInsurance(CreateInsuranceDto createInsuranceDto) {
-        InsuranceEntity insurance;
-        if (createInsuranceDto.getType() == Type.PERSON) {
-            insurance = new PersonInsuranceEntity();
-            ((PersonInsuranceEntity) insurance).setMinAge(createInsuranceDto.getMinAge());
-        } else if (createInsuranceDto.getType() == Type.VEHICLE) {
-            insurance = new VehicleInsuranceEntity();
-            ((VehicleInsuranceEntity) insurance).setUsage(createInsuranceDto.getUsage());
-        } else {
-            throw new IllegalArgumentException("Invalid insurance type");
+    public void save(InsuranceDto insuranceDto) {
+        Optional<CompanyEntity> company = companyRepository.findById(insuranceDto.getCompanyId());
+        if (!company.isPresent()) {
+            throw new IllegalArgumentException("Company not found with id: " + insuranceDto.getCompanyId());
         }
-        insurance.setName(createInsuranceDto.getName());
-        insurance.setPrice(createInsuranceDto.getPrice());
-        insurance.setCreatedAt(LocalDateTime.now());
-        CompanyEntity company = companyRepository.findById(createInsuranceDto.getCompanyId())
-                .orElseThrow(() -> new IllegalArgumentException("Company not found"));
-        insurance.setCompany(company);
-        insuranceRepository.save(insurance);
+        if (insuranceDto instanceof PersonInsuranceDto) {
+            PersonInsuranceDto personInsuranceDto = (PersonInsuranceDto) insuranceDto;
+            insuranceRepository.save(
+                    PersonInsuranceEntity.builder()
+                            .type(InsuranceType.PERSON)
+                            .name(insuranceDto.getName())
+                            .price(insuranceDto.getPrice())
+                            .company(company.get())
+                            .minAge(personInsuranceDto.getMinAge())
+                            .build()
+            );
+        } else if (insuranceDto instanceof VehicleInsuranceDto) {
+            VehicleInsuranceDto vehicleInsuranceDto = (VehicleInsuranceDto) insuranceDto;
+            insuranceRepository.save(
+                    VehicleInsuranceEntity.builder()
+                            .type(InsuranceType.VEHICLE)
+                            .name(insuranceDto.getName())
+                            .price(insuranceDto.getPrice())
+                            .company(company.get())
+                            .usage(vehicleInsuranceDto.getUsage())
+                            .build()
+            );
+        }
     }
+
 }

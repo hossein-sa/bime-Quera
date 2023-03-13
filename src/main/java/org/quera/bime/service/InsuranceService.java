@@ -1,7 +1,7 @@
 package org.quera.bime.service;
 
-import org.quera.bime.model.dto.CreateInsuranceDto;
+import org.quera.bime.model.dto.InsuranceDto;
 
 public interface InsuranceService {
-    void createInsurance(CreateInsuranceDto createInsuranceDto);
+    void save(InsuranceDto insuranceDto);
 }
