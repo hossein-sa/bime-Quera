@@ -4,7 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
-import org.quera.bime.model.enums.Type;
+import org.quera.bime.model.enums.InsuranceType;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -25,7 +25,7 @@ public class InsuranceEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    Type type;
+    InsuranceType type;
 
     @Column(nullable = false)
     String name;
