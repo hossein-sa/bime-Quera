@@ -1,9 +1,7 @@
 package org.quera.bime.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.GeneratorType;
 
 import javax.persistence.*;
@@ -12,6 +10,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "companies")
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -23,8 +23,8 @@ public class CompanyEntity {
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<InsuranceEntity> insurances = new ArrayList<>();
+    @OneToMany(mappedBy = "company")
+    private List<InsuranceEntity> insurances;
 
 
 }
