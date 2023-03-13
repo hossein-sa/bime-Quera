@@ -1,21 +1,23 @@
 package org.quera.bime.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "vehicles_insurance")
+@DiscriminatorValue("VEHICLES")
+@SuperBuilder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
 public class VehicleInsuranceEntity extends InsuranceEntity {
     @Column(nullable = false)
-    private String usage;
+    String usage;
 }
